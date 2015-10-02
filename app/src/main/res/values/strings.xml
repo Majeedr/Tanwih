@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Majeedr Tanwih</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="title_activity_search_tanwih">SearchTanwihActivity</string>
+    <string name="action_add_item">Add Item</string>
+    <string name="app_label">Find Tanwih</string>
+    <string name="search_hint">Type to find desired Tanwih</string>
+    <string name="title_activity_tanwih_type">TanwihTypeActivity</string>
+</resources>
