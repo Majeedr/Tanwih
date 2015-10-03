@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-
+/**
+ * An activity manage addition and revision of tanwih.
+ */
 public class TanwihTypeActivity extends ActionBarActivity {
 
     @Override
@@ -41,14 +43,15 @@ public class TanwihTypeActivity extends ActionBarActivity {
             String content = ((EditText) findViewById(R.id.tanwih_content)).getText().toString();
 
             // Call event
-            onTanwihSaved(title, content);
+            onSaveTanwih(title, content);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void onTanwihSaved(String title, String content) {
+    private void onSaveTanwih(String title, String content) {
         Intent tanwih = new Intent();
+        tanwih.putExtra(TanwihListActivity.tanwihOperation, "add");
         tanwih.putExtra(TanwihListActivity.tanwihTitle, title);
         tanwih.putExtra(TanwihListActivity.tanwihContent, content);
         setResult(RESULT_OK, tanwih);
