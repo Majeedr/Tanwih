@@ -20,6 +20,7 @@ import com.majeedr.tanwih.database.contract.TanwihContract;
  */
 public class TanwihListActivity extends AppCompatActivity {
     public static String tanwihTitle = "tanwih-title";
+    public static String tanwihAuthor = "tanwih-author";
     public static String tanwihContent = "tanwih-content";
     public static String tanwihOperation = "tanwih-operation";
 

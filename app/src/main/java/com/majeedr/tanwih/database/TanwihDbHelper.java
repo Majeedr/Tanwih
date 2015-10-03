@@ -18,7 +18,9 @@ public class TanwihDbHelper extends SQLiteOpenHelper{
                     TanwihEntry._ID + " INTEGER PRIMARY KEY," +
                     TanwihEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     TanwihEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
+                    TanwihEntry.COLUMN_NAME_AUTHOR + TEXT_TYPE + COMMA_SEP +
                     TanwihEntry.COLUMN_NAME_CONTENT + TEXT_TYPE + COMMA_SEP +
+                    TanwihEntry.COLUMN_NAME_LINKS + TEXT_TYPE + COMMA_SEP +
                     TanwihEntry.COLUMN_NAME_INSYNC + INT_TYPE + COMMA_SEP +
                     TanwihEntry.COLUMN_NAME_OPERATION + INT_TYPE + COMMA_SEP +
             " )";

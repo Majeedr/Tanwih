@@ -15,7 +15,9 @@ public final class TanwihContract {
         public static final String TABLE_NAME = "tanwih";
         public static final String COLUMN_NAME_ENTRY_ID = "id";
         public static final String COLUMN_NAME_TITLE = "title";
+        public static final String COLUMN_NAME_AUTHOR = "author";
         public static final String COLUMN_NAME_CONTENT = "content";
+        public static final String COLUMN_NAME_LINKS = "links";
 
         public static final String COLUMN_NAME_INSYNC = "in_sync";
         public static final String COLUMN_NAME_OPERATION = "operation";

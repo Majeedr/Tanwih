@@ -38,21 +38,24 @@ public class TanwihTypeActivity extends ActionBarActivity {
         }
 
         if (id == R.id.action_save) {
-            // Fetch tanwih
+            // Get tanwih data from widget
             String title = ((EditText) findViewById(R.id.tanwih_title)).getText().toString();
             String content = ((EditText) findViewById(R.id.tanwih_content)).getText().toString();
+            // TODO: Get owner username
+            String author = "owner";
 
-            // Call event
-            onSaveTanwih(title, content);
+            // Triger saving
+            onSaveTanwih(title, content, author);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void onSaveTanwih(String title, String content) {
+    private void onSaveTanwih(String title, String content, String author) {
         Intent tanwih = new Intent();
         tanwih.putExtra(TanwihListActivity.tanwihOperation, "add");
         tanwih.putExtra(TanwihListActivity.tanwihTitle, title);
+        tanwih.putExtra(TanwihListActivity.tanwihAuthor, author);
         tanwih.putExtra(TanwihListActivity.tanwihContent, content);
         setResult(RESULT_OK, tanwih);
         finish();
