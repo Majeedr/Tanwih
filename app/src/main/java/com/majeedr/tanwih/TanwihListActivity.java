@@ -69,6 +69,7 @@ public class TanwihListActivity extends AppCompatActivity {
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
             String title = data.getStringExtra(tanwihTitle);
             String content = data.getStringExtra(tanwihContent);
+            String author = data.getStringExtra(tanwihAuthor);
             TanwihContract.TanwihEntry.EntryOperation oper = TanwihContract.TanwihEntry.EntryOperation.values()[data.getIntExtra(tanwihOperation, 0)];
 
             if (content.isEmpty()) {
@@ -82,6 +83,7 @@ public class TanwihListActivity extends AppCompatActivity {
             // Add to database
             ContentValues entry = new ContentValues();
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_TITLE, title);
+            entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_AUTHOR, author);
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_CONTENT, content);
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_INSYNC, 0);
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_OPERATION, TanwihContract.TanwihEntry.EntryOperation.ADD.getValue());
