@@ -1,8 +1,8 @@
 package com.majeedr.tanwih;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -10,7 +10,7 @@ import android.widget.EditText;
 /**
  * An activity manage addition and revision of tanwih.
  */
-public class TanwihTypeActivity extends ActionBarActivity {
+public class TanwihTypeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
