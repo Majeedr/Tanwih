@@ -1,12 +1,18 @@
 package com.majeedr.tanwih;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.majeedr.tanwih.database.TanwihDbHelper;
+import com.majeedr.tanwih.database.contract.TanwihContract;
 
 /**
  * @brief Quote manager : addition, check, remove, link, etc.
@@ -15,6 +21,7 @@ import android.view.MenuItem;
 public class TanwihListActivity extends AppCompatActivity {
     public static String tanwihTitle = "tanwih-title";
     public static String tanwihContent = "tanwih-content";
+    public static String tanwihOperation = "tanwih-operation";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +68,44 @@ public class TanwihListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
-            String title = data.getIntExtra(tanwihTitle);
-            String content = data.getIntExtra(tanwihContent);
+            String title = data.getStringExtra(tanwihTitle);
+            String content = data.getStringExtra(tanwihContent);
+            TanwihContract.TanwihEntry.EntryOperation oper = TanwihContract.TanwihEntry.EntryOperation.values()[data.getIntExtra(tanwihOperation, 0)];
+
+            if (content.isEmpty()) {
+                Toast.makeText(getBaseContext(), "Item not saved", Toast.LENGTH_SHORT);
+                return;
+            }
+
+            TanwihDbHelper mDbHelper = new TanwihDbHelper (getBaseContext());
+            SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
             // Add to database
+            ContentValues entry = new ContentValues();
+            entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_TITLE, title);
+            entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_CONTENT, content);
+            entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_INSYNC, 0);
+            entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_OPERATION, TanwihContract.TanwihEntry.EntryOperation.ADD.getValue());
+
+            long rowId;
+
+            // Check operation
+            switch (oper) {
+                case ADD: {
+                    rowId = db.insert(
+                            TanwihContract.TanwihEntry.TABLE_NAME,
+                            "null",
+                            entry
+                    );
+                    break;
+                }
+                case DELETE: {
+                    break;
+                }
+                case UPDATE: {
+                    break;
+                }
+            }
         }
     }
 }
