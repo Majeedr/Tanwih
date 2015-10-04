@@ -122,7 +122,8 @@ public class TanwihListActivity extends AppCompatActivity {
     }
 
     private void setupList() {
-        String WHERE_NOT_DELETED_ENTRY = TanwihContract.TanwihEntry.COLUMN_NAME_OPERATION + "!= 2";
+        String WHERE_NOT_DELETED_ENTRY = TanwihContract.TanwihEntry.COLUMN_NAME_OPERATION + " != "
+                + TanwihContract.TanwihEntry.EntryOperation.DELETE.getValue();
 
         ListView tanwihList = (ListView) findViewById(R.id.tanwih_listview);
         db = mDbHelper.getReadableDatabase();
