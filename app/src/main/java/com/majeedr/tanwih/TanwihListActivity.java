@@ -81,7 +81,7 @@ public class TanwihListActivity extends AppCompatActivity {
             TanwihContract.TanwihEntry.EntryOperation oper = TanwihContract.TanwihEntry.EntryOperation.values()[data.getIntExtra(tanwihOperation, 0)];
 
             if (content.isEmpty()) {
-                Toast.makeText(getBaseContext(), "Item not saved", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "Item not saved", Toast.LENGTH_SHORT);
                 return;
             }
 
@@ -117,7 +117,7 @@ public class TanwihListActivity extends AppCompatActivity {
     }
 
     private void setupDatabase() {
-        mDbHelper = new TanwihDbHelper (getBaseContext());
+        mDbHelper = new TanwihDbHelper (this);
     }
 
     private void setupList() {
