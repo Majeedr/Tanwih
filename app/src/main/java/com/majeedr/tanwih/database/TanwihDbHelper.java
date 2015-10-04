@@ -22,7 +22,7 @@ public class TanwihDbHelper extends SQLiteOpenHelper{
                     TanwihEntry.COLUMN_NAME_CONTENT + TEXT_TYPE + COMMA_SEP +
                     TanwihEntry.COLUMN_NAME_LINKS + TEXT_TYPE + COMMA_SEP +
                     TanwihEntry.COLUMN_NAME_INSYNC + INT_TYPE + COMMA_SEP +
-                    TanwihEntry.COLUMN_NAME_OPERATION + INT_TYPE + COMMA_SEP +
+                    TanwihEntry.COLUMN_NAME_OPERATION + INT_TYPE +
             " )";
 
     private static final String SQL_DELETE_ENTRIES =
