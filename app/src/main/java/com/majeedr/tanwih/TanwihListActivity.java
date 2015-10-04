@@ -92,18 +92,19 @@ public class TanwihListActivity extends AppCompatActivity {
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_AUTHOR, author);
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_CONTENT, content);
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_INSYNC, 0);
-            entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_OPERATION, TanwihContract.TanwihEntry.EntryOperation.ADD.getValue());
 
             long rowId;
 
             // Check operation
             switch (oper) {
                 case ADD: {
+                    entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_OPERATION, TanwihContract.TanwihEntry.EntryOperation.ADD.getValue());
                     rowId = db.insert(
                             TanwihContract.TanwihEntry.TABLE_NAME,
                             "null",
                             entry
                     );
+                    db.close();
                     break;
                 }
                 case DELETE: {
