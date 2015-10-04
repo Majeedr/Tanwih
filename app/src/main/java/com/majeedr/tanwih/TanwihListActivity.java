@@ -2,11 +2,16 @@ package com.majeedr.tanwih;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.majeedr.tanwih.database.TanwihDbHelper;
@@ -22,11 +27,16 @@ public class TanwihListActivity extends AppCompatActivity {
     public static String tanwihContent = "tanwih-content";
     public static String tanwihOperation = "tanwih-operation";
 
+    protected TanwihDbHelper mDbHelper;
+    protected SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // ActionBar actionBar = getSupportActionBar();
         setContentView(R.layout.activity_tanwih_list);
+        setupDatabase();
+        setupList();
     }
 
     @Override
@@ -77,9 +87,7 @@ public class TanwihListActivity extends AppCompatActivity {
                 return;
             }
 
-            TanwihDbHelper mDbHelper = new TanwihDbHelper (getBaseContext());
-            SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
+            db = mDbHelper.getWritableDatabase();
             // Add to database
             ContentValues entry = new ContentValues();
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_TITLE, title);
@@ -108,5 +116,50 @@ public class TanwihListActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void setupDatabase() {
+        mDbHelper = new TanwihDbHelper (getBaseContext());
+    }
+
+    private void setupList() {
+        String WHERE_NOT_DELETED_ENTRY = TanwihContract.TanwihEntry.COLUMN_NAME_OPERATION + "!= 2";
+
+        ListView tanwihList = (ListView) findViewById(R.id.tanwih_listview);
+        db = mDbHelper.getReadableDatabase();
+        Cursor cur = db.query("tanwih",
+                              new String[]{
+                                      TanwihContract.TanwihEntry.COLUMN_NAME_ENTRY_ID,
+                                      TanwihContract.TanwihEntry.COLUMN_NAME_TITLE,
+                                      TanwihContract.TanwihEntry.COLUMN_NAME_CONTENT,
+                                      TanwihContract.TanwihEntry.COLUMN_NAME_AUTHOR
+                              }, WHERE_NOT_DELETED_ENTRY, null, null, null, null);
+
+        Log.i("db.cursor", "Cursor count : " + cur.getCount());
+        if (cur == null || cur.getCount() == 0) {
+            Log.i("db.cursor", "Empty cursor");
+            return;
+        }
+
+        Tanwih[] tanwihs = new Tanwih[cur.getCount()];
+
+        if (cur.moveToFirst()) {
+            int i = 0;
+            do {
+                int id = cur.getInt(cur.getColumnIndex(TanwihContract.TanwihEntry.COLUMN_NAME_ENTRY_ID));
+                String title = cur.getString(cur.getColumnIndex(TanwihContract.TanwihEntry.COLUMN_NAME_TITLE));
+                String author = cur.getString(cur.getColumnIndex(TanwihContract.TanwihEntry.COLUMN_NAME_AUTHOR));
+                String content = cur.getString(cur.getColumnIndex(TanwihContract.TanwihEntry.COLUMN_NAME_CONTENT));
+                Log.i("db.value", String.valueOf(id));
+                Tanwih tanw = new Tanwih(id, author, title, content);
+                tanwihs[i] = tanw;
+                i++;
+            } while (cur.moveToNext());
+        }
+
+        db.close();
+
+        TanwihListAdapter adapter = new TanwihListAdapter(this, tanwihs);
+        tanwihList.setAdapter(adapter);
     }
 }
