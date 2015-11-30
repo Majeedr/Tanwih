@@ -1,4 +1,4 @@
-package com.majeedr.tanwih;
+package com.majeedr.tanwih.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,10 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.majeedr.tanwih.R;
+
 /**
  * An activity manage addition and revision of tanwih.
  */
-public class TanwihTypeActivity extends AppCompatActivity {
+public class WriterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +55,10 @@ public class TanwihTypeActivity extends AppCompatActivity {
 
     private void onSaveTanwih(String title, String content, String author) {
         Intent tanwih = new Intent();
-        tanwih.putExtra(TanwihListActivity.tanwihOperation, "add");
-        tanwih.putExtra(TanwihListActivity.tanwihTitle, title);
-        tanwih.putExtra(TanwihListActivity.tanwihAuthor, author);
-        tanwih.putExtra(TanwihListActivity.tanwihContent, content);
+        tanwih.putExtra(CollectionActivity.tanwihOperation, "add");
+        tanwih.putExtra(CollectionActivity.tanwihTitle, title);
+        tanwih.putExtra(CollectionActivity.tanwihAuthor, author);
+        tanwih.putExtra(CollectionActivity.tanwihContent, content);
         setResult(RESULT_OK, tanwih);
         finish();
     }

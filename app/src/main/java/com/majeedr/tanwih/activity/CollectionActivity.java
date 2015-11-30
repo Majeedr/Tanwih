@@ -1,40 +1,72 @@
-package com.majeedr.tanwih;
+package com.majeedr.tanwih.activity;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.majeedr.tanwih.database.TanwihDbHelper;
+import com.majeedr.tanwih.CollectionListAdapter;
+import com.majeedr.tanwih.R;
+import com.majeedr.tanwih.database.DatabaseHelper;
 import com.majeedr.tanwih.database.contract.TanwihContract;
 
 /**
  * @brief Quote manager : addition, check, remove, link, etc.
  * Show lists of quotes with it's brief information and has been designed mark.
  */
-public class TanwihListActivity extends AppCompatActivity {
+public class CollectionActivity extends AppCompatActivity implements View.OnClickListener {
     public static String tanwihTitle = "tanwih-title";
     public static String tanwihAuthor = "tanwih-author";
     public static String tanwihContent = "tanwih-content";
     public static String tanwihOperation = "tanwih-operation";
 
-    protected TanwihDbHelper mDbHelper;
+    protected DatabaseHelper mDbHelper;
     protected SQLiteDatabase db;
+
+    ListView tanwihCollection;
+
+    TextView title_tv;
+    TextView content_tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // ActionBar actionBar = getSupportActionBar();
         setContentView(R.layout.activity_tanwih_list);
+        tanwihCollection = (ListView) findViewById(R.id.tanwih_listview);
+
+        setupWidget();
         setupDatabase();
         setupList();
+    }
+
+    private void setupWidget() {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.list_item: {
+                // Showing tanwih activity
+                Intent edit_item = new Intent(CollectionActivity.this, ShowActivity.class);
+                // TODO: Make constant in enum
+                // Get id attached to view as tag
+                Log.d("item.id", "ID Tanwih: " + v.getTag(R.id.tag_tanwih_index));
+                edit_item.putExtra("item.id", (int) v.getTag(R.id.tag_tanwih_index));
+                startActivity(edit_item);
+                break;
+            }
+        }
+        return;
     }
 
     @Override
@@ -64,7 +96,7 @@ public class TanwihListActivity extends AppCompatActivity {
 
         if (id == R.id.action_add_item) {
             // Show add activity
-            Intent add_item_new = new Intent(TanwihListActivity.this, TanwihTypeActivity.class);
+            Intent add_item_new = new Intent(CollectionActivity.this, WriterActivity.class);
             startActivityForResult(add_item_new, 0);
             return true;
         }
@@ -85,7 +117,6 @@ public class TanwihListActivity extends AppCompatActivity {
                 return;
             }
 
-            db = mDbHelper.getWritableDatabase();
             // Add to database
             ContentValues entry = new ContentValues();
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_TITLE, title);
@@ -93,18 +124,13 @@ public class TanwihListActivity extends AppCompatActivity {
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_CONTENT, content);
             entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_INSYNC, 0);
 
-            long rowId;
-
+            db = mDbHelper.getWritableDatabase();
+            CollectionListAdapter adapter = ((CollectionListAdapter) tanwihCollection.getAdapter());
             // Check operation
             switch (oper) {
                 case ADD: {
                     entry.put(TanwihContract.TanwihEntry.COLUMN_NAME_OPERATION, TanwihContract.TanwihEntry.EntryOperation.ADD.getValue());
-                    rowId = db.insert(
-                            TanwihContract.TanwihEntry.TABLE_NAME,
-                            "null",
-                            entry
-                    );
-                    db.close();
+                    adapter.addData(entry);
                     break;
                 }
                 case DELETE: {
@@ -114,52 +140,21 @@ public class TanwihListActivity extends AppCompatActivity {
                     break;
                 }
             }
+
+            Log.e("Tanwih List", "ID " + tanwihCollection.getId());
+            adapter.refreshData();
         }
     }
 
     private void setupDatabase() {
-        mDbHelper = new TanwihDbHelper (this);
+        mDbHelper = new DatabaseHelper(this);
     }
 
     private void setupList() {
-        String WHERE_NOT_DELETED_ENTRY = TanwihContract.TanwihEntry.COLUMN_NAME_OPERATION + " != "
-                + TanwihContract.TanwihEntry.EntryOperation.DELETE.getValue();
-
-        ListView tanwihList = (ListView) findViewById(R.id.tanwih_listview);
-        db = mDbHelper.getReadableDatabase();
-        Cursor cur = db.query("tanwih",
-                              new String[]{
-                                      TanwihContract.TanwihEntry.COLUMN_NAME_ENTRY_ID,
-                                      TanwihContract.TanwihEntry.COLUMN_NAME_TITLE,
-                                      TanwihContract.TanwihEntry.COLUMN_NAME_CONTENT,
-                                      TanwihContract.TanwihEntry.COLUMN_NAME_AUTHOR
-                              }, WHERE_NOT_DELETED_ENTRY, null, null, null, null);
-
-        Log.i("db.cursor", "Cursor count : " + cur.getCount());
-        if (cur == null || cur.getCount() == 0) {
-            Log.i("db.cursor", "Empty cursor");
-            return;
-        }
-
-        Tanwih[] tanwihs = new Tanwih[cur.getCount()];
-
-        if (cur.moveToFirst()) {
-            int i = 0;
-            do {
-                int id = cur.getInt(cur.getColumnIndex(TanwihContract.TanwihEntry.COLUMN_NAME_ENTRY_ID));
-                String title = cur.getString(cur.getColumnIndex(TanwihContract.TanwihEntry.COLUMN_NAME_TITLE));
-                String author = cur.getString(cur.getColumnIndex(TanwihContract.TanwihEntry.COLUMN_NAME_AUTHOR));
-                String content = cur.getString(cur.getColumnIndex(TanwihContract.TanwihEntry.COLUMN_NAME_CONTENT));
-                Log.i("db.value", String.valueOf(id));
-                Tanwih tanw = new Tanwih(id, author, title, content);
-                tanwihs[i] = tanw;
-                i++;
-            } while (cur.moveToNext());
-        }
-
-        db.close();
-
-        TanwihListAdapter adapter = new TanwihListAdapter(this, tanwihs);
-        tanwihList.setAdapter(adapter);
+        CollectionListAdapter adapter = new CollectionListAdapter(this, this);
+        adapter.refreshData();
+        tanwihCollection.setAdapter(adapter);
+        Log.i("Tanwih List", "Adapter has been set!");
+        Log.i("Tanwih List", "Adapter :" + tanwihCollection.getAdapter().toString());
     }
 }

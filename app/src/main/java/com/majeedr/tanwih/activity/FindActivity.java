@@ -1,4 +1,4 @@
-package com.majeedr.tanwih;
+package com.majeedr.tanwih.activity;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.majeedr.tanwih.R;
 
-public class SearchTanwihActivity extends ActionBarActivity {
+
+public class FindActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
