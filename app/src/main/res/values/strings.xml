@@ -9,4 +9,5 @@
     <string name="app_label">Find Tanwih</string>
     <string name="search_hint">Type to find desired Tanwih</string>
     <string name="title_activity_tanwih_type">TanwihTypeActivity</string>
+    <string name="title_activity_show">ShowActivity</string>
 </resources>
