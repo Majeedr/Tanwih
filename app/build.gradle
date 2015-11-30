@@ -17,6 +17,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            java {
+                exclude 'com/majeedr/tanwih/TanwihCollection.java'
+            }
+        }
+        androidTest {
+            java {
+                exclude 'com/majeedr/tanwih/TanwihCollection.java'
+            }
+        }
+    }
 }
 
 dependencies {
